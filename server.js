@@ -12,9 +12,17 @@ app.use(bodyParser.json());
 app.get('/', function (req, res){
 	res.send('Todo API Root');
 });
-// GET TODO
+// GET TODO /todos?completed=true
 app.get('/todos', function (req, res){
-	res.json(todos);
+	var queryParams = req.query;
+	var filteredTodos = todos;
+
+	if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true'){
+		filteredTodos = _.where(filteredTodos, {completed: true});
+	} else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false'){ 
+		filteredTodos = _.where(filteredTodos, {completed: false});
+	}
+	res.json(filteredTodos);
 });
 // GET TODO BY ID
 app.get('/todos/:id', function (req, res){
