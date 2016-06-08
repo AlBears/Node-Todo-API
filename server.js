@@ -12,11 +12,11 @@ app.use(bodyParser.json());
 app.get('/', function (req, res){
 	res.send('Todo API Root');
 });
-
+// GET TODO
 app.get('/todos', function (req, res){
 	res.json(todos);
 });
-
+// GET TODO BY ID
 app.get('/todos/:id', function (req, res){
 	var todoId = parseInt(req.params.id, 10);
 	var matchedTodo = _.findWhere(todos, {id: todoId});
@@ -28,7 +28,7 @@ app.get('/todos/:id', function (req, res){
 		res.status(404).send();
 	}
 });
-
+// POST TODO
 app.post('/todos', function (req, res){
 	var body = _.pick(req.body, 'description', 'completed');
 	if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0){
@@ -43,6 +43,33 @@ app.post('/todos', function (req, res){
 	res.json(body);
 });
 
+//DELETE //todos/:id
+app.delete('/todos/:id', function (req, res){
+	var todoId = parseInt(req.params.id, 10);
+	var matchedTodo = _.findWhere(todos, {id: todoId});
+
+	if(!matchedTodo) {
+		res.status(404).json({"error": "no todo found with that id"});
+	} else {
+		todos = _.without(todos, matchedTodo);
+		res.json(matchedTodo);
+	}
+
+});
+
+
 app.listen(PORT, function (){
 	console.log('Express listening on port ' + PORT + '!');
 });
+
+
+
+
+
+
+
+
+
+
+
+
